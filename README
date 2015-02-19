@@ -50,7 +50,7 @@ Installation:
 
 	I then do
 
-	cp udf_charsets.so /usr/lib
+	cp udf_charsets.so /usr/lib/mysq/plugins
 
 	and in the mysql issue SQL command
 

@@ -1,11 +1,11 @@
 
-PREFIX = /usr/lib
+PREFIX = /usr/lib/mysql/plugin
 SOURCE = udf_charsets.c
 SOFILE = udf_charsets.so
 MAKEFILE = Makefile
 
 CC = gcc
-INC = ../include
+INC = /usr/include/mysql
 
 all: $(SOURCE)
 	gcc -I$(INC) -shared -o $(SOFILE) $(SOURCE)
