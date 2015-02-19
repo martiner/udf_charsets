@@ -1,0 +1,33 @@
+#!/usr/bin/perl -w
+
+use strict;
+
+use Cz::Cstocs;
+
+unless (@ARGV >= 1) {
+	die "Usage: make_il_to_ascii charset [output_charset]\n\twhere charset is input charset in cstocs notation (il2, il1)\n";
+}
+
+my $input = shift;
+my $output = shift;
+$output = 'ascii' if not defined $output;
+my $conv = new Cz::Cstocs($input, $output, "one_by_one" => 1);
+
+print "static char ${input}_to_${output}_conv_table[256] = {\n\t";
+
+for (0 .. 255) {
+	my $out = &$conv(chr($_));
+	$out = substr $out, 0, 1;
+	if (not $out =~ /^[\040-\176]$/)
+		{ printf "'\\%03o', ", ord($out) }
+	elsif ($out eq "'")
+		{ print "'\\'', " }
+	elsif ($out eq "\\")
+		{ print "'\\\\', " }
+	else
+		{ print "'$out', " }
+	print "\n\t" unless (($_ + 1) % 8);
+	}
+
+print "};\n";
+__END__

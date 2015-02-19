@@ -1,0 +1,82 @@
+
+			------------------------------
+				udf_charsets.c
+			------------------------------
+
+This is the README file for the udf_charsets.c utility.
+
+The file udf_charsets.c defines user definable functions for MySQL
+database server for charset conversions, namely il1_to_ascii,
+il2_to_ascii and cp1250_to_ascii, cp1250_to_il2 and il2_to_cp1250.
+The *_to_ascii versions strip diacritics from input strings, the other
+two provide conversions for two character sets, ISO-8859-2 and
+Windows-1250.
+
+The SQL command would be
+
+	select id, name from people where il2_to_ascii(name) = 'jezek';
+
+You might even add function lower, to allow case insensitive search:
+
+		where lower(il2_to_ascii(name)) = 'jezek';
+
+Or do like search:
+
+		where lower(il2_to_ascii(name)) like 'jezek%';
+
+You cannot make index of function, so if you want fast lookup, you
+need to have separate column that will hold *_to_ascii'ed values of
+the data. Then you put index on this column. Of course, you have to
+update this information with each update, which might or might not be
+a problem -- MySQL doesn't have triggers, so the change of this
+secondary information is up to you.
+
+The conversion sinformation was generated using a Cz::Cstocs Perl
+module. The included stript make_il_to_ascii makes it possible to
+create function for other charsets. The module Cz::Cstocs is
+available from any good CPAN site.
+
+Installation:
+	To install this library, you have to compile it into *.so file,
+	install it into directory where MySQL will find it, then tell
+	MySQL about the functions. For me, this compile command works:
+
+	gcc -Iinclude -shared -o udf_charsets.so udf_charsets.c
+
+	if I'm in the top directory of the mysql-* distribution --
+	change the -I option to point to directory that contains the
+	mysql.h header file appropriately. If you do not want the
+	cp1250 charset, use a -DNOWINSET switch to compiler.
+
+	I then do
+
+	cp udf_charsets.so /usr/lib
+
+	and in the mysql issue SQL command
+
+	create function il2_to_ascii returns string soname "udf_charsets.so";
+
+	Then,
+
+	select il2_to_ascii(name) from table;
+
+	should work. Since you cannot specify full path of the *.so
+	file in the create function command, you have to put it to
+	some widely recognized directory, probably as a root.
+
+	You have to repeat the create function command for each function
+	you want to use in your server.
+
+Problems and bug reports:
+	If you find a bug in the code, feel free to mail me. Please,
+	always include a version of the library and use meaningful
+	Subject line.
+
+Available:
+	http://www.fi.muni.cz/~adelton/l10n/
+
+Copyright: (c) 1998--2001 Jan Pazdziora, adelton@fi.muni.cz. All rights
+	reserved. This package is free software; you can redistribute
+	it and/or modify it under the terms of either GPL or Artistic
+	Licence, whichever you like more.
+
