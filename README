@@ -41,7 +41,7 @@ Installation:
 	install it into directory where MySQL will find it, then tell
 	MySQL about the functions. For me, this compile command works:
 
-	gcc -Iinclude -shared -o udf_charsets.so udf_charsets.c
+	gcc -Iinclude -fPIC -shared -o udf_charsets.so udf_charsets.c
 
 	if I'm in the top directory of the mysql-* distribution --
 	change the -I option to point to directory that contains the

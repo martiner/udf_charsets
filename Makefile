@@ -8,7 +8,7 @@ CC = gcc
 INC = /usr/include/mysql
 
 all: $(SOURCE)
-	gcc -I$(INC) -shared -o $(SOFILE) $(SOURCE)
+	gcc -I$(INC) -fPIC -shared -o $(SOFILE) $(SOURCE)
 
 install: $(SOFILE)
 	cp $(SOFILE) $(PREFIX)
