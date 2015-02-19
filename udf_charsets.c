@@ -75,7 +75,7 @@ int udf_charsets_convert(UDF_INIT *initid, UDF_ARGS *args, char *table,
 	return count;
 }
 char * udf_charsets_convert_deinit(UDF_INIT *initid) {
-	if (initid->ptr) my_free(initid->ptr, 0);
+	if (initid->ptr) my_free(initid->ptr);
 	return NULL;
 }
 
